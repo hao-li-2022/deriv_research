@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PineGrid — 独立研究</title>
+<meta name="description" content="PineGrid — 独立研究 Independent Research">
+<meta name="theme-color" content="#efebce">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='none' stroke='%23064013' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='7.5' fill='none' stroke='%23064013' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='2.5' fill='%23064013'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --paper: #efebce;
+    --ink: #064013;
+    --ink-soft: rgba(6, 64, 19, 0.55);
+    --ink-faint: rgba(6, 64, 19, 0.28);
+    --serif: Georgia, "Times New Roman", "Songti SC", "STSong", "SimSun", serif;
+    --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, "Courier New", monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    background-color: var(--paper);
+    background-image:
+      repeating-linear-gradient(to right, rgba(6,64,19,0.045) 0, rgba(6,64,19,0.045) 1px, transparent 1px, transparent 88px),
+      repeating-linear-gradient(to bottom, rgba(6,64,19,0.045) 0, rgba(6,64,19,0.045) 1px, transparent 1px, transparent 88px);
+    color: var(--ink);
+    font-family: var(--serif);
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---- 顶部与底部的等宽体元信息 ---- */
+  .meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  header.meta, footer.meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 28px 4vw;
+    flex-wrap: wrap;
+  }
+  footer.meta { border-top: 1px solid var(--ink-faint); padding-top: 18px; padding-bottom: 26px; }
+  .meta a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--ink-faint);
+    padding-bottom: 2px;
+    transition: opacity 0.25s ease;
+  }
+  .meta a:hover { opacity: 0.45; }
+
+  /* ---- 中央主区 ---- */
+  main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 0 6vw;
+    position: relative;
+  }
+  .stage { position: relative; }
+
+  h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(64px, 13vw, 168px);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  h1 .dot { color: var(--ink-soft); }
+
+  .lede {
+    margin-top: 3.2vh;
+    font-size: clamp(17px, 2vw, 24px);
+    line-height: 1.6;
+    color: var(--ink);
+    max-width: 34em;
+  }
+  .lede .en {
+    font-family: var(--mono);
+    font-size: 0.62em;
+    letter-spacing: 0.22rem;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    display: block;
+    margin-top: 1.6vh;
+  }
+
+  /* ---- 年轮：右侧缓转的同心圆 ---- */
+  .rings {
+    position: absolute;
+    top: 50%;
+    right: -6vw;
+    transform: translateY(-50%);
+    width: clamp(300px, 44vw, 620px);
+    height: auto;
+    pointer-events: none;
+  }
+  .rings g { transform-origin: 250px 250px; animation: spin 140s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .rings circle {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 1;
+  }
+
+  /* ---- 入场：分层浮起 ---- */
+  .rise {
+    opacity: 0;
+    transform: translateY(14px);
+    animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  .rise.d1 { animation-delay: 0.10s; }
+  .rise.d2 { animation-delay: 0.30s; }
+  .rise.d3 { animation-delay: 0.55s; }
+  .rise.d4 { animation-delay: 0.80s; }
+  @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rise { opacity: 1; transform: none; animation: none; }
+    .rings g { animation: none; }
+  }
+  @media (max-width: 640px) {
+    .rings { opacity: 0.5; right: -30vw; }
+    footer.meta { flex-direction: column; gap: 0.6rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="meta">
+  <span class="rise d1">PineGrid®</span>
+  <span class="rise d1">Est. 2026 — Shanghai</span>
+</header>
+
+<main>
+  <div class="stage">
+    <h1 class="rise d2">Pine<span class="dot">Grid</span></h1>
+    <p class="lede rise d3">
+      独立研究，独立判断。
+      <span class="en">Independent Research — Notes, Data &amp; Conviction</span>
+    </p>
+  </div>
+
+  <svg class="rings rise d4" viewBox="0 0 500 500" aria-hidden="true">
+    <g>
+      <circle cx="250" cy="250" r="238" opacity="0.10"/>
+      <circle cx="252" cy="248" r="205" opacity="0.12" stroke-dasharray="1200 60"/>
+      <circle cx="248" cy="251" r="172" opacity="0.14"/>
+      <circle cx="251" cy="249" r="141" opacity="0.16" stroke-dasharray="700 40 180 25"/>
+      <circle cx="249" cy="250" r="112" opacity="0.18"/>
+      <circle cx="250" cy="252" r="86"  opacity="0.20" stroke-dasharray="420 30"/>
+      <circle cx="250" cy="250" r="61"  opacity="0.22"/>
+      <circle cx="251" cy="249" r="38"  opacity="0.26" stroke-dasharray="160 18"/>
+      <circle cx="250" cy="250" r="17"  opacity="0.30"/>
+      <circle cx="250" cy="250" r="3.5" opacity="0.55" fill="#064013" stroke="none"/>
+    </g>
+  </svg>
+</main>
+
+<footer class="meta">
+  <span class="rise d4">31.23°N, 121.47°E — PineGrid.cn</span>
+  <span class="rise d4"><a href="mailto:hi@pinegrid.cn">hi@pinegrid.cn</a></span>
+</footer>
+
+</body>
+</html>
